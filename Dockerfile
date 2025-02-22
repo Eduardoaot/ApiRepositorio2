@@ -12,6 +12,8 @@ COPY ./pom.xml /app
 COPY ./.mvn /app/.mvn
 COPY ./mvnw /app
 
+RUN chmod +x ./mvnw
+
 # Descargar las dependencias de Maven
 RUN ./mvnw dependency:go-offline
 
