@@ -2,6 +2,7 @@ package mk.coleccion.servicio;
 
 import mk.coleccion.dto.ColeccionMangaDetalleDTO;
 import mk.coleccion.dto.SerieInfoDTO;
+import mk.coleccion.dto.UsuarioColeccionDTO;
 import mk.coleccion.repositorio.ColeccionMangaRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,33 +41,75 @@ public class ColeccionMangaServicio {
                     Integer id_serie = (Integer) row[0];
                     String serieNom = (String) row[1];
                     Integer serieTot = (Integer) row[2];
-                    Integer tomosUsuario = (row[3] != null) ? ((Number) row[3]).intValue() : 0;
-                    String serieImagen = (String) row[4]; // URL de la imagen
+                    Integer estadoSerie = (row[3] != null) ? (Integer) row[3] : null;
+                    Integer tomosUsuario = (row[4] != null) ? ((Number) row[4]).intValue() : 0;
+                    String serieImagen = (String) row[5]; // URL de la imagen
 
                     // Cálculo del porcentaje de tomos adquiridos
                     double seriePorcentaje = (serieTot != null && serieTot > 0)
                             ? ((double) tomosUsuario / serieTot) * 100
                             : 0;
 
-                    // Determinar el estado de la colección
+                    // Determinar el estado de la colección según estadoSerie
                     String serieEstado;
-                    if (serieTot == null || serieTot == 0) {
-                        serieEstado = "No completar";
-                    } else if (serieTot == 1) {
-                        serieEstado = "Tomo único";
-                    } else if (tomosUsuario.equals(serieTot)) {
-                        serieEstado = "¡Completa!";
-                    } else if (tomosUsuario > 0) {
-                        int faltantes = serieTot - tomosUsuario;
-                        serieEstado = "Te faltan " + faltantes;
+                    if (estadoSerie != null) {
+                        switch (estadoSerie) {
+                            case 1:
+                                if (serieTot != null && serieTot > 0) {
+                                    int faltantes = serieTot - tomosUsuario;
+                                    serieEstado = "Te faltan " + faltantes;
+                                } else {
+                                    serieEstado = "No completar";
+                                }
+                                break;
+                            case 2:
+                                serieEstado = "No completar";
+                                break;
+                            case 3:
+                                serieEstado = "Tomo único";
+                                break;
+                            case 4:
+                                serieEstado = "¡Completado!";
+                                break;
+                            default:
+                                serieEstado = "Desconocido";
+                        }
                     } else {
-                        serieEstado = "No iniciar";
+                        serieEstado = "No especificado";
                     }
+
+
 
                     return new SerieInfoDTO(id_serie, serieNom, seriePorcentaje, serieEstado, serieImagen);
                 })
                 .collect(Collectors.toList());
     }
+
+    public UsuarioColeccionDTO obtenerDetallesColeccionDelUsuario(Integer idUsuario) {
+        List<Object[]> results = coleccionMangaRepositorio.findMangasAndSeriesByUserId(idUsuario);
+
+        // Obtener los resultados de la consulta
+        Object[] row = results.get(0);  // Solo un resultado debería ser devuelto
+
+        // Convertir los valores de Long a Integer
+        Integer totalMangas = row[0] != null ? ((Long) row[0]).intValue() : 0;
+        Integer totalSeries = row[1] != null ? ((Long) row[1]).intValue() : 0;
+        Integer seriesPorCompletar = row[2] != null ? ((Long) row[2]).intValue() : 0;
+        Integer seriesCompletadas = row[3] != null ? ((Long) row[3]).intValue() : 0;
+
+        // Calcular el porcentaje de series completadas
+        double porcentajeSeries = (totalSeries > 0)
+                ? ((double) seriesCompletadas / totalSeries) * 100
+                : 0;
+
+        // Crear y devolver el DTO con los valores calculados
+        return new UsuarioColeccionDTO(totalMangas, totalSeries, seriesPorCompletar, seriesCompletadas, porcentajeSeries);
+    }
+
+
+
+
+
 
 
 }

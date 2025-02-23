@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -14,14 +15,14 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class EstadoLectura {
-
+public class EstadoSerie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer idEstadoLectura;
+    Integer idEstadoSerie;
 
-    String EstadoLectura;
+    String EstadoSerie;
 
-    @OneToMany(mappedBy = "estadoLectura", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<ColeccionManga> coleccionMangas;
+    @OneToMany(mappedBy = "estadoSerie", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ColeccionSerie> coleccionSerie;
+
 }

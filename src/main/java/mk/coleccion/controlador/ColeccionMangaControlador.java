@@ -1,9 +1,6 @@
 package mk.coleccion.controlador;
 
-import mk.coleccion.dto.ColeccionMangaDetalleDTO;
-import mk.coleccion.dto.SerieInfoDTO;
-import mk.coleccion.dto.MangaResponse;
-import mk.coleccion.dto.SerieResponse;
+import mk.coleccion.dto.*;
 import mk.coleccion.servicio.ColeccionMangaServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +34,16 @@ public class ColeccionMangaControlador {
 
         // Crear el objeto de respuesta
         SerieResponse response = new SerieResponse("success", series);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/usuario-detalles/{idUsuario}")
+    public ResponseEntity<UsuarioColeccionResponse> obtenerDetallesColeccionDelUsuario(@PathVariable Integer idUsuario) {
+        UsuarioColeccionDTO detallesUsuario = coleccionMangaServicio.obtenerDetallesColeccionDelUsuario(idUsuario);
+
+        // Crear el objeto de respuesta
+        UsuarioColeccionResponse response = new UsuarioColeccionResponse("success", detallesUsuario);
 
         return ResponseEntity.ok(response);
     }
