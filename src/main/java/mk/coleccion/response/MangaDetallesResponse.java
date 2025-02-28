@@ -1,11 +1,15 @@
-package mk.coleccion.dto;
+package mk.coleccion.response;
 
-public class UsuarioColeccionResponse {
+import mk.coleccion.dto.MangaDetallesDTO;
+
+import java.util.List;
+
+public class MangaDetallesResponse {
     private String response;
-    private UsuarioColeccionDTO result;
+    private List<MangaDetallesDTO> result;
 
     // Constructor
-    public UsuarioColeccionResponse(String response, UsuarioColeccionDTO result) {
+    public MangaDetallesResponse(String response, List<MangaDetallesDTO> result) {
         this.response = response;
         this.result = result;
     }
@@ -19,11 +23,11 @@ public class UsuarioColeccionResponse {
         this.response = response;
     }
 
-    public UsuarioColeccionDTO getResult() {
+    public List<MangaDetallesDTO> getResult() {
         return result;
     }
 
-    public void setResult(UsuarioColeccionDTO result) {
+    public void setResult(List<MangaDetallesDTO> result) {
         this.result = result;
     }
 }

@@ -23,6 +23,7 @@ public class Usuario {
     String user;
     String password;
     String email;
+    String name;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Presupuestos> presupuestos;

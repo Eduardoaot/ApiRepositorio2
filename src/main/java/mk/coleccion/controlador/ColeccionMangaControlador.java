@@ -1,6 +1,9 @@
 package mk.coleccion.controlador;
 
 import mk.coleccion.dto.*;
+import mk.coleccion.response.MangaResponse;
+import mk.coleccion.response.SerieResponse;
+import mk.coleccion.response.UsuarioColeccionResponse;
 import mk.coleccion.servicio.ColeccionMangaServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

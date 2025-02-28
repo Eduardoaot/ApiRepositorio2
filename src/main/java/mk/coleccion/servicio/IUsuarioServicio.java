@@ -4,5 +4,7 @@ import mk.coleccion.modelo.Usuario;
 
 public interface IUsuarioServicio {
 
-    public void guardarUsuario(Usuario usuario);
+    public Usuario guardarUsuario(Usuario usuario);
+
+    public Usuario autenticarUsuario(String email, String password);
 }
