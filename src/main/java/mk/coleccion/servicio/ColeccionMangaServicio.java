@@ -1,5 +1,6 @@
 package mk.coleccion.servicio;
 
+import jakarta.transaction.Transactional;
 import mk.coleccion.dto.ColeccionMangaDetalleDTO;
 import mk.coleccion.dto.SerieInfoDTO;
 import mk.coleccion.dto.UsuarioColeccionDTO;
@@ -104,6 +105,20 @@ public class ColeccionMangaServicio {
 
         // Crear y devolver el DTO con los valores calculados
         return new UsuarioColeccionDTO(totalMangas, totalSeries, seriesPorCompletar, seriesCompletadas, porcentajeSeries);
+    }
+
+    @Transactional
+    public void eliminarMangaYSerieSiEsNecesario(Integer idManga, Integer idUsuario) {
+        coleccionMangaRepositorio.eliminarMangaDeColeccion(idManga, idUsuario);
+        coleccionMangaRepositorio.eliminarSerieSiNoTieneMangas(idManga, idUsuario);
+        coleccionMangaRepositorio.actualizarEstadoSerieSiEra4(idManga, idUsuario);
+    }
+
+    @Transactional
+    public void agregarMangaYSerieSiEsNecesario(Integer idManga, Integer idUsuario) {
+        coleccionMangaRepositorio.agregarMangaAColeccion(idManga, idUsuario);
+        coleccionMangaRepositorio.agregarSerieSiNoExiste(idManga, idUsuario);
+        coleccionMangaRepositorio.actualizarEstadoSerie(idManga, idUsuario);
     }
 
 

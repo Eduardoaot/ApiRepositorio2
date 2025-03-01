@@ -1,7 +1,9 @@
 package mk.coleccion.repositorio;
 
+import jakarta.transaction.Transactional;
 import mk.coleccion.modelo.ColeccionManga;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -52,7 +54,7 @@ public interface ColeccionMangaRepositorio extends JpaRepository<ColeccionManga,
             "COUNT(cm.id_manga) AS totalMangas, " +
             "COUNT(DISTINCT s.id_serie) AS totalSeries, " +
             "COUNT(DISTINCT CASE WHEN cs.id_estado_serie = 1 THEN s.id_serie END) AS seriesPorCompletar, " +
-            "COUNT(DISTINCT CASE WHEN cs.id_estado_serie = 4 THEN s.id_serie END) AS seriesCompletadas " +
+            "COUNT(DISTINCT CASE WHEN cs.id_estado_serie IN (3, 4) THEN s.id_serie END) AS seriesCompletadas " +
             "FROM coleccion_manga cm " +
             "INNER JOIN manga m ON cm.id_manga = m.id_manga " +
             "INNER JOIN serie s ON m.id_serie = s.id_serie " +
@@ -61,7 +63,92 @@ public interface ColeccionMangaRepositorio extends JpaRepository<ColeccionManga,
             nativeQuery = true)
     List<Object[]> findMangasAndSeriesByUserId(@Param("idUsuario") Integer idUsuario);
 
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM coleccion_manga " +
+            "WHERE id_manga = :idManga AND id_usuario = :idUsuario",
+            nativeQuery = true)
+    void eliminarMangaDeColeccion(@Param("idManga") Integer idManga, @Param("idUsuario") Integer idUsuario);
 
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM coleccion_serie " +
+            "WHERE id_serie = (SELECT id_serie FROM manga WHERE id_manga = :idManga) " +
+            "AND id_usuario = :idUsuario " +
+            "AND NOT EXISTS ( " +
+            "    SELECT 1 FROM coleccion_manga cm " +
+            "    JOIN manga m ON cm.id_manga = m.id_manga " +
+            "    WHERE m.id_serie = (SELECT id_serie FROM manga WHERE id_manga = :idManga) " +
+            "    AND cm.id_usuario = :idUsuario)",
+            nativeQuery = true)
+    void eliminarSerieSiNoTieneMangas(@Param("idManga") Integer idManga, @Param("idUsuario") Integer idUsuario);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE coleccion_serie cs " +
+            "SET cs.id_estado_serie = 1 " +
+            "WHERE cs.id_serie = (SELECT m.id_serie FROM manga m WHERE m.id_manga = :idManga) " +
+            "AND cs.id_usuario = :idUsuario " +
+            "AND cs.id_estado_serie = 4", nativeQuery = true)
+    void actualizarEstadoSerieSiEra4(@Param("idManga") Integer idManga, @Param("idUsuario") Integer idUsuario);
+
+    @Modifying
+    @Transactional
+    @Query(value = """
+        INSERT INTO coleccion_manga (id_estado_lectura, id_manga, id_usuario, fecha)
+        SELECT 1, :idManga, :idUsuario, NOW()
+        FROM DUAL
+        WHERE NOT EXISTS (
+            SELECT 1 FROM coleccion_manga 
+            WHERE id_manga = :idManga AND id_usuario = :idUsuario
+        )
+        """, nativeQuery = true)
+    void agregarMangaAColeccion(@Param("idManga") Integer idManga, @Param("idUsuario") Integer idUsuario);
+
+    @Modifying
+    @Transactional
+    @Query(value = """
+        INSERT INTO coleccion_serie (fecha, id_serie, id_estado_serie, id_usuario)
+        SELECT NOW(), s.id_serie,
+            CASE 
+                WHEN s.serie_tot = 1 THEN 3
+                ELSE 1
+            END, :idUsuario
+        FROM serie s
+        WHERE s.id_serie = (SELECT id_serie FROM manga WHERE id_manga = :idManga)
+        AND NOT EXISTS (
+            SELECT 1 FROM coleccion_serie 
+            WHERE id_serie = s.id_serie AND id_usuario = :idUsuario
+        )
+        """, nativeQuery = true)
+    void agregarSerieSiNoExiste(@Param("idManga") Integer idManga, @Param("idUsuario") Integer idUsuario);
+
+    @Modifying
+    @Transactional
+    @Query(value = """
+    UPDATE coleccion_serie
+    SET id_estado_serie = 4
+    WHERE id_serie = (
+        SELECT id_serie 
+        FROM manga 
+        WHERE id_manga = :idManga
+    )
+    AND id_usuario = :idUsuario
+    AND EXISTS (
+        SELECT 1
+        FROM coleccion_manga cm
+        WHERE cm.id_usuario = :idUsuario
+        AND cm.id_manga IN (
+            SELECT id_manga
+            FROM manga
+            WHERE id_serie = (SELECT id_serie FROM manga WHERE id_manga = :idManga)
+        )
+        GROUP BY cm.id_usuario
+        HAVING COUNT(cm.id_manga) = (SELECT serie_tot FROM serie WHERE id_serie = (SELECT id_serie FROM manga WHERE id_manga = :idManga))
+    )
+    AND id_estado_serie NOT IN (2, 3)
+    """, nativeQuery = true)
+    void actualizarEstadoSerie(@Param("idManga") Integer idManga, @Param("idUsuario") Integer idUsuario);
 
 
 

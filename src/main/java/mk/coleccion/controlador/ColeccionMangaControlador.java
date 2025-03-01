@@ -1,16 +1,12 @@
 package mk.coleccion.controlador;
 
 import mk.coleccion.dto.*;
-import mk.coleccion.response.MangaResponse;
-import mk.coleccion.response.SerieResponse;
-import mk.coleccion.response.UsuarioColeccionResponse;
+import mk.coleccion.response.*;
 import mk.coleccion.servicio.ColeccionMangaServicio;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -49,5 +45,21 @@ public class ColeccionMangaControlador {
         UsuarioColeccionResponse response = new UsuarioColeccionResponse("success", detallesUsuario);
 
         return ResponseEntity.ok(response);
+    }
+
+        @PostMapping("/eliminar-manga")
+    public ResponseEntity<EliminarMangaResponse> eliminarManga(@RequestBody EliminarMangaRequest request) {
+        try {
+            coleccionMangaServicio.eliminarMangaYSerieSiEsNecesario(request.getIdManga(), request.getIdUsuario());
+            return new ResponseEntity<>(new EliminarMangaResponse("Manga eliminado correctamente"), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new EliminarMangaResponse("Error al eliminar el manga"), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/agregar-manga")
+    public ResponseEntity<AgregarMangaResponse> agregarManga(@RequestBody AgregarMangaRequest request) {
+        coleccionMangaServicio.agregarMangaYSerieSiEsNecesario(request.getIdManga(), request.getIdUsuario());
+        return ResponseEntity.ok(new AgregarMangaResponse("Manga agregado correctamente", request.getIdManga()));
     }
 }

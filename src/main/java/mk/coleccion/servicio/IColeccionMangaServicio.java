@@ -10,4 +10,5 @@ public interface IColeccionMangaServicio {
     List<ColeccionMangaDetalleDTO> obtenerDetallesColeccionManga(Integer idUsuario);
     List<SerieInfoDTO> obtenerDetallesColeccionSeries(Integer idUsuario);
     List<UsuarioColeccionDTO> obtenerDetallesColeccionDelUsuario(Integer idUsuario);
+    public void eliminarMangaYSerieSiEsNecesario(Integer idManga, Integer idUsuario);
 }
