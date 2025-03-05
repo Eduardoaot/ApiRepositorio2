@@ -27,7 +27,7 @@ public interface ColeccionMangaRepositorio extends JpaRepository<ColeccionManga,
             "INNER JOIN precios pr ON m.id_precio = pr.id_precios " +
             "INNER JOIN serie s ON m.id_serie = s.id_serie " +
             "WHERE cm.id_usuario = :idUsuario " +
-            "ORDER BY cm.fecha DESC;", nativeQuery = true)
+            "ORDER BY cm.fecha_agregados DESC;", nativeQuery = true)
     List<Object[]> findDetallesColeccionManga(@Param("idUsuario") Integer idUsuario);
 
     @Query(value = "SELECT " +
@@ -95,7 +95,7 @@ public interface ColeccionMangaRepositorio extends JpaRepository<ColeccionManga,
     @Modifying
     @Transactional
     @Query(value = """
-        INSERT INTO coleccion_manga (id_estado_lectura, id_manga, id_usuario, fecha)
+        INSERT INTO coleccion_manga (id_estado_lectura, id_manga, id_usuario, fecha_agregados)
         SELECT 1, :idManga, :idUsuario, NOW()
         FROM DUAL
         WHERE NOT EXISTS (

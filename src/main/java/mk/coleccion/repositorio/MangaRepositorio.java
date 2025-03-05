@@ -14,12 +14,12 @@ import java.util.List;
 @Repository
 public interface MangaRepositorio extends JpaRepository<Manga, Integer> {
 
-    @Modifying
-    @Transactional
-    @Query(value = "UPDATE coleccion_manga SET id_estado_lectura = :estadoLectura WHERE id_manga = :idManga AND id_usuario = :idUsuario", nativeQuery = true)
-    int actualizarEstadoLectura(@Param("estadoLectura") Integer estadoLectura,
-                                @Param("idManga") Integer idManga,
-                                @Param("idUsuario") Integer idUsuario);
+        @Modifying
+        @Transactional
+        @Query(value = "UPDATE coleccion_manga SET id_estado_lectura = :estadoLectura, fecha_leidos = NOW() WHERE id_manga = :idManga AND id_usuario = :idUsuario; ", nativeQuery = true)
+        int actualizarEstadoLectura(@Param("estadoLectura") Integer estadoLectura,
+                                    @Param("idManga") Integer idManga,
+                                    @Param("idUsuario") Integer idUsuario);
 
 
     // La consulta existente para obtener los detalles del manga
@@ -44,4 +44,51 @@ public interface MangaRepositorio extends JpaRepository<Manga, Integer> {
             "WHERE m.id_manga = :idManga " +
             "LIMIT 1", nativeQuery = true)
     List<Object[]> buscarDetallesManga(@Param("idManga") Integer idManga, @Param("idUsuario") Integer idUsuario);
+
+    @Query(value = "SELECT " +
+            "m.id_manga, " +
+            "s.serie_nom AS titulo_serie, " +
+            "m.manga_num AS numero_manga, " +
+            "mi.direccion_manga_img AS imagen_manga " +
+            "FROM coleccion_manga cm " +
+            "JOIN manga m ON cm.id_manga = m.id_manga " +
+            "JOIN serie s ON m.id_serie = s.id_serie " +
+            "JOIN manga_imagen mi ON m.id_manga_imagen = mi.id_manga_imagen " +
+            "WHERE cm.id_usuario = :idUsuario AND cm.id_estado_lectura = 2", nativeQuery = true)
+    List<Object[]> obtenerMangasSinLeer(@Param("idUsuario") Integer idUsuario);
+
+    @Query(value = "SELECT " +
+            "m.id_manga, " +
+            "m.manga_num AS numero_manga, " +
+            "mi.direccion_manga_img AS imagen_manga " +
+            "FROM coleccion_manga cm " +
+            "JOIN manga m ON cm.id_manga = m.id_manga " +
+            "JOIN serie s ON m.id_serie = s.id_serie " +
+            "JOIN manga_imagen mi ON m.id_manga_imagen = mi.id_manga_imagen " +
+            "WHERE cm.id_usuario = :idUsuario AND cm.id_estado_lectura = 1 " +
+            "ORDER BY cm.fecha_agregados ASC", nativeQuery = true)
+    List<Object[]> obtenerMangasPendientes(@Param("idUsuario") Integer idUsuario);
+
+
+    @Query(value = "SELECT " +
+            "COUNT(CASE WHEN cm.id_estado_lectura = 3 THEN 1 END) AS total_mangas_estado_3, " +
+            "COUNT(CASE WHEN cm.id_estado_lectura = 3 AND MONTH(cm.fecha_leidos) = MONTH(CURRENT_DATE) AND YEAR(cm.fecha_leidos) = YEAR(CURRENT_DATE) THEN 1 END) AS mangas_leidos_mes_actual, " +
+            "COUNT(CASE WHEN cm.id_estado_lectura = 3 AND YEAR(cm.fecha_leidos) = YEAR(CURRENT_DATE) THEN 1 END) AS mangas_leidos_ano_actual " +
+            "FROM coleccion_manga cm " +
+            "WHERE cm.id_usuario = :idUsuario " +
+            "AND cm.id_estado_lectura = 3", nativeQuery = true)
+    List<Object[]> obtenerEstadisticasLecturaMangas(@Param("idUsuario") Integer idUsuario);
+
+    @Query(value = "SELECT " +
+            "MONTH(fecha_agregados) AS mes_agregado, " +
+            "YEAR(fecha_agregados) AS anio_agregado, " +
+            "CASE WHEN id_estado_lectura = 3 THEN MONTH(fecha_leidos) END AS mes_leido, " +
+            "CASE WHEN id_estado_lectura = 3 THEN YEAR(fecha_leidos) END AS anio_leido " +
+            "FROM coleccion_manga " +
+            "WHERE id_usuario = :idUsuario",
+            nativeQuery = true)
+    List<Object[]> obtenerMangasFecha(@Param("idUsuario") Integer idUsuario);
+
+
+
 }

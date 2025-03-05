@@ -32,6 +32,8 @@ public class ColeccionManga {
     @JoinColumn(name = "idEstadoLectura", nullable = false)
     EstadoLectura estadoLectura;
 
-    Date Fecha;
+    Date FechaAgregados;
+
+    Date FechaLeidos;
 
 }

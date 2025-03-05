@@ -79,8 +79,6 @@ public class ColeccionMangaServicio {
                         serieEstado = "No especificado";
                     }
 
-
-
                     return new SerieInfoDTO(id_serie, serieNom, seriePorcentaje, serieEstado, serieImagen);
                 })
                 .collect(Collectors.toList());

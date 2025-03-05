@@ -30,4 +30,6 @@ public class Usuario {
 
     @OneToMany(mappedBy = "usuario2", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ColeccionManga> coleccionMangas;
+
+    String meta;
 }

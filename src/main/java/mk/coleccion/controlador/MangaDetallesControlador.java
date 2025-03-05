@@ -1,11 +1,12 @@
 package mk.coleccion.controlador;
 
 import mk.coleccion.dto.MangaDetallesDTO;
-import mk.coleccion.response.ActualizarEstadoLecturaRequest;
-import mk.coleccion.response.MangaDetallesResponse;
-import mk.coleccion.response.MangaEstadoLecturaResponse;
+import mk.coleccion.dto.MangaLecturaDTO;
+import mk.coleccion.dto.MangaPendienteDTO;
+import mk.coleccion.response.*;
 import mk.coleccion.servicio.MangaServicio;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +36,34 @@ public class MangaDetallesControlador {
 
         return new MangaDetallesResponse(response, detalles);
     }
+
+    @GetMapping("/lectura/{id_usuario}")
+    public LecturaGeneralResponse obtenerDetallesLectura(@PathVariable Integer id_usuario) throws InterruptedException {
+        // Obtener los detalles de la lectura
+        MangaLecturaDTO detalles = mangaServicio.obtenerDetallesLectura(id_usuario);
+
+        // Verificar si los detalles no están vacíos
+        String response = (detalles.getListaMangasCompradosData().isEmpty() && detalles.getListaMangasLeidosData().isEmpty() && detalles.getListaMangasMeses().isEmpty())
+                ? "No encontrado"
+                : "Éxito";
+
+        // Devolver la respuesta general con los detalles
+        return new LecturaGeneralResponse(response, detalles);
+    }
+
+    @GetMapping("/pendientes/{idUsuario}")
+    public LecturaPendientesResponse obtenerMangasPendientes(@PathVariable Integer idUsuario) {
+        // Obtener las mangas pendientes desde el servicio
+        List<MangaPendienteDTO> mangasPendientes = mangaServicio.obtenerMangasPendientes(idUsuario);
+
+        // Crear la respuesta personalizada
+        String response = "Mangas pendientes obtenidos con éxito";
+        LecturaPendientesResponse lecturaPendientesResponse = new LecturaPendientesResponse(response, mangasPendientes);
+
+        // Devolver la respuesta
+        return new LecturaPendientesResponse(response, mangasPendientes);
+    }
 }
+
 
 
