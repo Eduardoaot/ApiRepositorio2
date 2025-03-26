@@ -14,7 +14,6 @@ public class MangaDTO {
         this.direccionImagen = direccionImagen;
         this.estadoManga = estadoManga;
     }
-
     public Integer getIdManga() {
         return idManga;
     }

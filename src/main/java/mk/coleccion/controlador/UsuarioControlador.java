@@ -1,5 +1,6 @@
 package mk.coleccion.controlador;
 
+import mk.coleccion.dto.UsuarioPerfilDTO;
 import mk.coleccion.response.LecturaYMetaResponse;
 import mk.coleccion.response.LoginRequest;
 import mk.coleccion.response.MetaRequest;
@@ -72,5 +73,11 @@ public class UsuarioControlador {
 
         // Aquí puedes retornar el objeto respuesta directamente
         return respuesta;
+    }
+
+    @GetMapping("/perfil/{idUsuario}")
+    public UsuarioPerfilDTO obtenerDatosPerfil(@PathVariable int idUsuario) {
+        // Llamamos al servicio para obtener la información
+        return usuarioServicio.obtenerPerfilPorId(idUsuario);
     }
 }

@@ -1,5 +1,6 @@
 package mk.coleccion.servicio;
 
+import mk.coleccion.dto.UsuarioPerfilDTO;
 import mk.coleccion.modelo.ColeccionManga;
 import mk.coleccion.modelo.Usuario;
 import mk.coleccion.repositorio.UsuarioRepositorio;
@@ -17,6 +18,16 @@ public class UsuarioServicio implements IUsuarioServicio{
 
     @Autowired
     private UsuarioRepositorio usuarioRepositorio;
+
+    public UsuarioPerfilDTO obtenerPerfilPorId(int idUsuario) {
+        // Buscar el usuario por id
+        Usuario usuario = usuarioRepositorio.findById(idUsuario).orElse(null);
+        if (usuario != null) {
+            // Mapear los datos a un DTO
+            return new UsuarioPerfilDTO(usuario.getEmail(), usuario.getName(), usuario.getUser());
+        }
+        return null; // O retornar una respuesta vacía o un error si no se encuentra el usuario
+    }
 
     @Override
     public Usuario guardarUsuario(Usuario usuario) {

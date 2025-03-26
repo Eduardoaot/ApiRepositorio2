@@ -39,25 +39,19 @@ public class MangaLecturaDTO {
         return listaMangasSinLeer;
     }
 
-    public void setListaMangasSinLeer(List<MangaSinLeerDTO> listaMangasSinLeer) {
-        this.listaMangasSinLeer = listaMangasSinLeer;
-    }
+    public void setListaMangasSinLeer(List<MangaSinLeerDTO> listaMangasSinLeer) {this.listaMangasSinLeer = listaMangasSinLeer;}
 
     public List<Integer> getListaMangasCompradosData() {
         return listaMangasCompradosData;
     }
 
-    public void setListaMangasCompradosData(List<Integer> listaMangasCompradosData) {
-        this.listaMangasCompradosData = listaMangasCompradosData;
-    }
+    public void setListaMangasCompradosData(List<Integer> listaMangasCompradosData) {this.listaMangasCompradosData = listaMangasCompradosData;}
 
     public List<Integer> getListaMangasLeidosData() {
         return listaMangasLeidosData;
     }
 
-    public void setListaMangasLeidosData(List<Integer> listaMangasLeidosData) {
-        this.listaMangasLeidosData = listaMangasLeidosData;
-    }
+    public void setListaMangasLeidosData(List<Integer> listaMangasLeidosData) {this.listaMangasLeidosData = listaMangasLeidosData;}
 
     public List<String> getListaMangasMeses() {
         return listaMangasMeses;

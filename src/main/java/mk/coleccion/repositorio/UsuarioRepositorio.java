@@ -31,5 +31,7 @@ public interface UsuarioRepositorio extends JpaRepository<Usuario, Integer> {
             "WHERE id_usuario = :idUsuario",
             nativeQuery = true)
     List<Object[]> obtenerMangasLecturaFecha(@Param("idUsuario") Integer idUsuario);
+
+
 }
 

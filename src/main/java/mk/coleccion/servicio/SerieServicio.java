@@ -30,9 +30,6 @@ public class SerieServicio {
 
         return seriesResponse;
     }
-
-
-
 }
 
 

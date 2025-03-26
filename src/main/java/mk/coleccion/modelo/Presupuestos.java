@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -30,4 +31,8 @@ public class Presupuestos {
 
     @OneToMany(mappedBy = "presupuestos", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PresupuestosManga> presupuestosMangas;
+
+    Date FechaPresupuestoCreado;
+
+    Date FechaPresupuestoAgregado;
 }
