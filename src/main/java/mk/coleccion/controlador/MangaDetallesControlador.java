@@ -30,10 +30,8 @@ public class MangaDetallesControlador {
     @GetMapping("/{idManga}/{idUsuario}/detalles")
     public MangaDetallesResponse obtenerDetallesManga(@PathVariable Integer idManga,
                                                       @PathVariable Integer idUsuario) {
-        // Obtenemos los detalles del manga
         List<MangaDetallesDTO> detalles = mangaServicio.obtenerDetallesManga(idManga, idUsuario);
         String response = detalles.isEmpty() ? "No encontrado" : "Éxito";
-
         return new MangaDetallesResponse(response, detalles);
     }
 

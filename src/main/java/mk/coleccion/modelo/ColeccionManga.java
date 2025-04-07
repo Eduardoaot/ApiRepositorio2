@@ -36,4 +36,6 @@ public class ColeccionManga {
 
     Date FechaLeidos;
 
+    Float TotalAhorado;
+
 }

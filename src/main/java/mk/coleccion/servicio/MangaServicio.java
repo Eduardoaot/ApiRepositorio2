@@ -26,11 +26,12 @@ public class MangaServicio implements IMangaServicio {
                 .map(row -> new MangaDetallesDTO(
                         (String) row[0],  // tituloSerie
                         (Float) row[1],   // numeroManga
-                        (String) row[2],   // estadoLectura
-                        (String) row[3],   // descripcion
-                        (String) row[4],   // nombreAutor
-                        (String) row[5],   // imagenManga
-                        (Long) row[6]   // estadoAgregado
+                        (String) row[2],  // estadoLectura
+                        (String) row[3],  // descripcion
+                        (String) row[4],  // nombreAutor
+                        (String) row[5],  // imagenManga
+                        (Float) row[6],   // precioManga
+                        (Long) row[7]     // estadoAgregado
                 ))
                 .collect(Collectors.toList());
     }
@@ -168,6 +169,10 @@ public class MangaServicio implements IMangaServicio {
 
         return mangaLecturaDTO;
     }
+
+
+
+
 
 
 

@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface MangaRepositorio extends JpaRepository<Manga, Integer> {
@@ -30,6 +31,7 @@ public interface MangaRepositorio extends JpaRepository<Manga, Integer> {
             "IFNULL(dm.descripcion_manga, 'Sin descripción') AS descripcion, " +
             "s.serie_aut AS nombre_autor, " +
             "mi.direccion_manga_img AS imagen_manga, " +
+            "p.precio AS precio_manga, " +
             "CASE " +
             "WHEN cm.id_usuario IS NOT NULL THEN TRUE " +
             "ELSE FALSE " +
@@ -40,10 +42,12 @@ public interface MangaRepositorio extends JpaRepository<Manga, Integer> {
             "LEFT JOIN estado_lectura el ON el.id_estado_lectura = " +
             "(SELECT id_estado_lectura FROM coleccion_manga WHERE id_manga = m.id_manga AND id_usuario = :idUsuario LIMIT 1) " +
             "LEFT JOIN manga_imagen mi ON m.id_manga_imagen = mi.id_manga_imagen " +
+            "LEFT JOIN precios p ON m.id_precio = p.id_precios " + // Se une con la tabla precios
             "LEFT JOIN coleccion_manga cm ON cm.id_manga = m.id_manga AND cm.id_usuario = :idUsuario " +
             "WHERE m.id_manga = :idManga " +
             "LIMIT 1", nativeQuery = true)
     List<Object[]> buscarDetallesManga(@Param("idManga") Integer idManga, @Param("idUsuario") Integer idUsuario);
+
 
     @Query(value = "SELECT " +
             "m.id_manga, " +
@@ -89,6 +93,36 @@ public interface MangaRepositorio extends JpaRepository<Manga, Integer> {
             nativeQuery = true)
     List<Object[]> obtenerMangasFecha(@Param("idUsuario") Integer idUsuario);
 
+    @Query(value = "SELECT " +
+            "m.id_manga, " +
+            "m.manga_num, " +
+            "mi.direccion_manga_img, " +
+            "p.precio, " +
+            "s.serie_nom, " +  // Agregado el nombre de la serie desde la tabla `serie`
+            "CASE " +
+            "WHEN cm.id_usuario IS NOT NULL THEN TRUE " +
+            "ELSE FALSE " +
+            "END AS EstadoAgregado " +
+            "FROM manga m " +
+            "JOIN coleccion_serie cs ON m.id_serie = cs.id_serie " +
+            "LEFT JOIN coleccion_manga cm ON m.id_manga = cm.id_manga AND cm.id_usuario = cs.id_usuario " +
+            "JOIN manga_imagen mi ON m.id_manga_imagen = mi.id_manga_imagen " +
+            "JOIN precios p ON m.id_precio = p.id_precios " +
+            "JOIN serie s ON m.id_serie = s.id_serie " +  // Agregado el JOIN con la tabla `serie`
+            "WHERE cs.id_usuario = :idUsuario " +
+            "AND cm.id_manga IS NULL " +
+            "ORDER BY m.manga_date DESC", nativeQuery = true)
+    List<Object[]> pendienteBuscarMangasFaltantes(@Param("idUsuario") Integer idUsuario);
 
+    @Query(value = "SELECT m.id_manga, m.manga_num, mi.direccion_manga_img, " +
+            "s.serie_nom, p.precio " +
+            "FROM manga m " +
+            "JOIN serie s ON m.id_serie = s.id_serie " +
+            "JOIN manga_imagen mi ON m.id_manga_imagen = mi.id_manga_imagen " +
+            "JOIN precios p ON m.id_precio = p.id_precios " +
+            "WHERE m.id_manga IN (:listaIds)", nativeQuery = true)
+    List<Object[]> buscarMangasConListasDeId(@Param("listaIds") List<Integer> listaIds);
+
+    Optional<Manga> findById(Integer idManga);
 
 }

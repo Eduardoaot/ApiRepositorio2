@@ -1,7 +1,9 @@
 package mk.coleccion.repositorio;
 
+import jakarta.transaction.Transactional;
 import mk.coleccion.modelo.PresupuestosManga;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -24,4 +26,14 @@ public interface PresupuestoMangaRepositorio extends JpaRepository<PresupuestosM
             "WHERE u.id_usuario = :idUsuario " +
             "AND p.id_presupuesto = :idPresupuesto", nativeQuery = true)
     List<Object[]> findDetallesPresupuestoManga(@Param("idUsuario") Integer idUsuario, @Param("idPresupuesto") Integer idPresupuesto);
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM PresupuestosManga pm WHERE pm.presupuestos.idPresupuesto = :idPresupuesto")
+    void eliminarPorIdPresupuesto(@Param("idPresupuesto") Integer idPresupuesto);
+
+    @Modifying
+    @Query("DELETE FROM PresupuestosManga pm WHERE pm.presupuestos.idPresupuesto = :idPresupuesto")
+    void deleteAllByIdPresupuesto(@Param("idPresupuesto") Integer idPresupuesto);
+
 }

@@ -6,33 +6,33 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.io.File;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Presupuestos {
+public class MonetarioAhorros {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer idPresupuesto;
+    Integer idMonetario;
 
     @ManyToOne
     @JoinColumn(name = "idUsuario", nullable = false)
-    Usuario usuario;
+    Usuario usuario4;
 
-    String nombrePresupuesto;
+    Float TotalAhorradoPresupuesto;
 
-    Float descuento;
+    Integer NumeroMangasAhorrados;
 
-    @OneToMany(mappedBy = "presupuestos", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<PresupuestosManga> presupuestosMangas;
+    Date FechaDeAhorro;
 
-    Date FechaPresupuestoCreado;
+    @PrePersist
+    public void prePersist() {
+        if (this.FechaDeAhorro == null) {
+            this.FechaDeAhorro = new Date();  // Asigna la fecha actual si no está establecida
+        }
+    }
 }
-
-

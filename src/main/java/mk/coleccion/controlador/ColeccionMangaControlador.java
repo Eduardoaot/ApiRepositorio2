@@ -1,6 +1,9 @@
 package mk.coleccion.controlador;
 
 import mk.coleccion.dto.*;
+import mk.coleccion.repositorio.ColeccionMangaRepositorio;
+import mk.coleccion.repositorio.MangaRepositorio;
+import mk.coleccion.repositorio.MonetarioAhorrosRepositorio;
 import mk.coleccion.response.*;
 import mk.coleccion.servicio.ColeccionMangaServicio;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +11,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Year;
+import java.time.YearMonth;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/coleccion-manga")
@@ -16,6 +24,15 @@ public class ColeccionMangaControlador {
 
     @Autowired
     private ColeccionMangaServicio coleccionMangaServicio;
+
+    @Autowired
+    private ColeccionMangaRepositorio coleccionMangaRepositorio;
+
+    @Autowired
+    private MonetarioAhorrosRepositorio monetarioAhorrosRepositorio;
+
+    @Autowired
+    private MangaRepositorio mangaRepositorio;
 
     @GetMapping("/detalles/{idUsuario}")
     public ResponseEntity<MangaResponse> obtenerDetallesColeccionManga(@PathVariable Integer idUsuario) {
@@ -59,7 +76,8 @@ public class ColeccionMangaControlador {
 
     @PostMapping("/agregar-manga")
     public ResponseEntity<AgregarMangaResponse> agregarManga(@RequestBody AgregarMangaRequest request) {
-        coleccionMangaServicio.agregarMangaYSerieSiEsNecesario(request.getIdManga(), request.getIdUsuario());
+        coleccionMangaServicio.agregarMangaYSerieSiEsNecesario(request.getIdManga(), request.getIdUsuario(), request.getPrecio());
         return ResponseEntity.ok(new AgregarMangaResponse("Manga agregado correctamente", request.getIdManga()));
     }
+
 }

@@ -28,6 +28,9 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Presupuestos> presupuestos;
 
+    @OneToMany(mappedBy = "usuario4", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<MonetarioAhorros> monetarioAhorros;
+
     @OneToMany(mappedBy = "usuario2", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ColeccionManga> coleccionMangas;
 

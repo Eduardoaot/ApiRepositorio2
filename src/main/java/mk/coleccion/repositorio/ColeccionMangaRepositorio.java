@@ -95,15 +95,19 @@ public interface ColeccionMangaRepositorio extends JpaRepository<ColeccionManga,
     @Modifying
     @Transactional
     @Query(value = """
-        INSERT INTO coleccion_manga (id_estado_lectura, id_manga, id_usuario, fecha_agregados)
-        SELECT 1, :idManga, :idUsuario, NOW()
-        FROM DUAL
-        WHERE NOT EXISTS (
-            SELECT 1 FROM coleccion_manga 
-            WHERE id_manga = :idManga AND id_usuario = :idUsuario
-        )
-        """, nativeQuery = true)
-    void agregarMangaAColeccion(@Param("idManga") Integer idManga, @Param("idUsuario") Integer idUsuario);
+    INSERT INTO coleccion_manga (id_estado_lectura, id_manga, id_usuario, fecha_agregados, total_ahorado)
+    SELECT 1, :idManga, :idUsuario, NOW(), :precio
+    FROM DUAL
+    WHERE NOT EXISTS (
+        SELECT 1 FROM coleccion_manga 
+        WHERE id_manga = :idManga AND id_usuario = :idUsuario
+    )
+    """, nativeQuery = true)
+    void agregarMangaAColeccion(@Param("idManga") Integer idManga,
+                                @Param("idUsuario") Integer idUsuario,
+                                @Param("precio") Float precio);
+
+
 
     @Modifying
     @Transactional
@@ -149,6 +153,37 @@ public interface ColeccionMangaRepositorio extends JpaRepository<ColeccionManga,
     AND id_estado_serie NOT IN (2, 3)
     """, nativeQuery = true)
     void actualizarEstadoSerie(@Param("idManga") Integer idManga, @Param("idUsuario") Integer idUsuario);
+
+
+    @Query("SELECT COUNT(cm) FROM ColeccionManga cm " +
+            "JOIN cm.manga2 m " +
+            "JOIN m.precios p " +  // Cambiado a 'precios' para coincidir con la entidad
+            "WHERE cm.usuario2.idUsuario = :idUsuario " +
+            "AND (cm.TotalAhorado IS NULL OR cm.TotalAhorado <> p.precio)") // 'precio' es el campo correcto aquí
+    int contarPorUsuario(@Param("idUsuario") Integer idUsuario);
+
+    @Query("SELECT COUNT(cm) FROM ColeccionManga cm " +
+            "JOIN cm.manga2 m " +
+            "JOIN m.precios p " +
+            "WHERE cm.usuario2.idUsuario = :idUsuario " +
+            "AND YEAR(cm.FechaAgregados) = :anio " +
+            "AND (cm.TotalAhorado IS NULL OR cm.TotalAhorado <> p.precio)")
+    int contarPorUsuarioEnAnio(@Param("idUsuario") Integer idUsuario, @Param("anio") int anio);
+
+    @Query("SELECT COUNT(cm) FROM ColeccionManga cm " +
+            "JOIN cm.manga2 m " +
+            "JOIN m.precios p " +
+            "WHERE cm.usuario2.idUsuario = :idUsuario " +
+            "AND YEAR(cm.FechaAgregados) = :anio " +
+            "AND MONTH(cm.FechaAgregados) = :mes " +
+            "AND (cm.TotalAhorado IS NULL OR cm.TotalAhorado <> p.precio)")
+    int contarPorUsuarioEnMes(@Param("idUsuario") Integer idUsuario, @Param("anio") int anio, @Param("mes") int mes);
+
+    @Query("SELECT COALESCE(SUM(m.precios.precio), 0) FROM ColeccionManga cm " +
+            "JOIN cm.manga2 m " +
+            "JOIN m.precios p " +
+            "WHERE cm.usuario2.idUsuario = :idUsuario")
+    Float sumarPrecioMangasPorUsuario(@Param("idUsuario") Integer idUsuario);
 
 
 

@@ -113,8 +113,8 @@ public class ColeccionMangaServicio {
     }
 
     @Transactional
-    public void agregarMangaYSerieSiEsNecesario(Integer idManga, Integer idUsuario) {
-        coleccionMangaRepositorio.agregarMangaAColeccion(idManga, idUsuario);
+    public void agregarMangaYSerieSiEsNecesario(Integer idManga, Integer idUsuario, Float precio) {
+        coleccionMangaRepositorio.agregarMangaAColeccion(idManga, idUsuario, precio);
         coleccionMangaRepositorio.agregarSerieSiNoExiste(idManga, idUsuario);
         coleccionMangaRepositorio.actualizarEstadoSerie(idManga, idUsuario);
     }

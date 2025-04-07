@@ -26,6 +26,6 @@ public class PresupuestosManga {
     @ManyToOne
     @JoinColumn(name = "idManga", nullable = false)
     Manga manga;
-
-
 }
+
+
