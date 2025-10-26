@@ -20,7 +20,7 @@ public class EstadoLectura {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer idEstadoLectura;
 
-    String EstadoLectura;
+    String ReadingStatus;
 
     @OneToMany(mappedBy = "estadoLectura", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ColeccionManga> coleccionMangas;

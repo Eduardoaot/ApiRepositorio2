@@ -17,7 +17,7 @@ public class Serie {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer idSerie;
 
-    String SerieNom;
+    String SerieName;
 
     @ManyToOne
     @JoinColumn(name = "idDescripcionSerie", nullable = false)
@@ -27,8 +27,7 @@ public class Serie {
     @OneToMany(mappedBy = "serie", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Manga> mangas;
 
-
-    String SerieAut;
-    Integer SerieTot;
+    String authorName;
+    Integer SerieTotals;
 
 }

@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.io.File;
 import java.util.List;
 
 @Entity
@@ -20,10 +19,10 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer idUsuario;
 
-    String user;
-    String password;
-    String email;
-    String name;
+    String userName;
+    String userPassword;
+    String userEmail;
+    String fullName;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Presupuestos> presupuestos;
@@ -34,5 +33,5 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario2", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ColeccionManga> coleccionMangas;
 
-    String meta;
+    String userMeta;
 }

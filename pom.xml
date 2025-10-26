@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>mk</groupId>
-	<artifactId>coleccion</artifactId>
+	<artifactId>HerramientaColeccion</artifactId>
 	<version>0.0.1</version>
 	<name>coleccion</name>
 	<description>Coneccion coleccion</description>
@@ -55,6 +55,21 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-fxml</artifactId>
+			<version>23.0.1</version>
+		</dependency>
+
+		<dependency>
+		<groupId>org.openjfx</groupId>
+		<artifactId>javafx-controls</artifactId>
+		<version>23.0.1</version>
+	</dependency>
+
+
 	</dependencies>
 
 	<build>
@@ -73,5 +88,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

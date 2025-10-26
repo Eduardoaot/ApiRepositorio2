@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Optional;
 import javax.sql.rowset.serial.SerialBlob;
@@ -21,14 +20,13 @@ public class MangaImagenServicio {
     // Guardar imagen
     public MangaImagen guardarImagen(MultipartFile file) throws IOException, SQLException {
         MangaImagen imagen = new MangaImagen();
-        imagen.setMangaImg(file.getOriginalFilename()); // Guarda el nombre del archivo
-        imagen.setMangaImagenArchivo(new SerialBlob(file.getBytes())); // Convierte en BLOB
-        imagen.setDireccionMangaImg("http://localhost:8080/api/mangaImagen/"+file.getOriginalFilename());
+        imagen.setMangaImageName(file.getOriginalFilename()); // Guarda el nombre del archivo
+        imagen.setMangaImageFile(new SerialBlob(file.getBytes())); // Convierte en BLOB
         return mangaImagenRepositorio.save(imagen);
     }
 
     // Obtener imagen por nombre
     public Optional<MangaImagen> obtenerImagenPorNombre(String nombreArchivo) {
-        return mangaImagenRepositorio.findByMangaImg(nombreArchivo);
+        return mangaImagenRepositorio.findByMangaImageName(nombreArchivo);
     }
 }

@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.io.File;
 import java.util.Date;
 import java.util.List;
 
@@ -25,14 +24,14 @@ public class Presupuestos {
     @JoinColumn(name = "idUsuario", nullable = false)
     Usuario usuario;
 
-    String nombrePresupuesto;
+    String nameBudget;
 
-    Float descuento;
+    Float discount;
 
     @OneToMany(mappedBy = "presupuestos", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PresupuestosManga> presupuestosMangas;
 
-    Date FechaPresupuestoCreado;
+    Date DateBudgetCreated;
 }
 
 

@@ -1,5 +1,7 @@
 package mk.coleccion;
 
+import javafx.application.Application;
+import mk.coleccion.appHeramienta.presentacion.AppMantenimientoMangaTrackFx;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -9,7 +11,8 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 public class ColeccionApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ColeccionApplication.class, args);
+//		SpringApplication.run(ColeccionApplication.class, args);
+		Application.launch(AppMantenimientoMangaTrackFx.class, args);
 	}
 
 }

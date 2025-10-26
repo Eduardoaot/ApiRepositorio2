@@ -6,6 +6,7 @@ import mk.coleccion.dto.SerieInfoDTO;
 import mk.coleccion.dto.UsuarioColeccionDTO;
 import mk.coleccion.repositorio.ColeccionMangaRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -18,6 +19,9 @@ public class ColeccionMangaServicio {
     @Autowired
     private ColeccionMangaRepositorio coleccionMangaRepositorio;
 
+    @Value("${app.base.image.url}")
+    private String baseImageUrl;
+
     public List<ColeccionMangaDetalleDTO> obtenerDetallesColeccionManga(Integer idUsuario) {
         List<Object[]> results = coleccionMangaRepositorio.findDetallesColeccionManga(idUsuario);
         return results.stream()
@@ -25,7 +29,7 @@ public class ColeccionMangaServicio {
                         (Integer) row[0], // idUsuario
                         (Integer) row[1], // idManga
                         (Date) row[2],  // mangaDate
-                        (String) row[3],  // mangaImg
+                        baseImageUrl + (String) row[3],  // mangaImg
                         (Float) row[4],   // mangaNum
                         (String) row[5],  // estado (cambiado de "descripcion" a "estado")
                         (Float) row[6],   // precio
@@ -79,7 +83,7 @@ public class ColeccionMangaServicio {
                         serieEstado = "No especificado";
                     }
 
-                    return new SerieInfoDTO(id_serie, serieNom, seriePorcentaje, serieEstado, serieImagen);
+                    return new SerieInfoDTO(id_serie, serieNom, seriePorcentaje, serieEstado, (baseImageUrl + serieImagen));
                 })
                 .collect(Collectors.toList());
     }
@@ -118,11 +122,4 @@ public class ColeccionMangaServicio {
         coleccionMangaRepositorio.agregarSerieSiNoExiste(idManga, idUsuario);
         coleccionMangaRepositorio.actualizarEstadoSerie(idManga, idUsuario);
     }
-
-
-
-
-
-
-
 }

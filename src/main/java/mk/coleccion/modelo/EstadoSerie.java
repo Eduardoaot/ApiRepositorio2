@@ -6,8 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.io.File;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -20,7 +18,7 @@ public class EstadoSerie {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer idEstadoSerie;
 
-    String EstadoSerie;
+    String SeriesStatus;
 
     @OneToMany(mappedBy = "estadoSerie", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ColeccionSerie> coleccionSerie;
