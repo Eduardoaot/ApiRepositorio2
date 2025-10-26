@@ -5,6 +5,7 @@ import mk.coleccion.dto.PendienteMangasFaltantesDTO;
 import mk.coleccion.dto.PlanDTO;
 import mk.coleccion.repositorio.MangaRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,6 +19,9 @@ public class PendienteServicio {
 
     @Autowired
     private MangaRepositorio mangaRepositorio;
+
+    @Value("${app.base.image.url}")
+    private String baseImageUrl;
 
     public PendienteMangasFaltantesDTO obtenerMangasFaltantes(Integer idUsuario) {
         // Obtener los resultados desde el repositorio
@@ -36,7 +40,7 @@ public class PendienteServicio {
             String nombreSerie = (String) row[4];  // Nombre de la serie (String)
 
             // Creamos el objeto MangaFaltanteDTO con los datos obtenidos
-            PendienteMangasFaltantesDTO.MangaFaltanteDTO mangaFaltanteDTO = new PendienteMangasFaltantesDTO.MangaFaltanteDTO(idManga, numeroManga, imagenManga, precio, nombreSerie);
+            PendienteMangasFaltantesDTO.MangaFaltanteDTO mangaFaltanteDTO = new PendienteMangasFaltantesDTO.MangaFaltanteDTO(idManga, numeroManga, (baseImageUrl + imagenManga), precio, nombreSerie);
 
             // Añadimos el objeto a la lista
             mangasFaltantes.add(mangaFaltanteDTO);
@@ -70,7 +74,7 @@ public class PendienteServicio {
                 .map(row -> new PlanDTO(
                         (Integer) row[0],            // idManga
                         (Float) row[1],              // numeroManga
-                        (String) row[2],              // imagenManga
+                        baseImageUrl + (String) row[2],              // imagenManga
                         (Float) row[4],               // precio
                         (String) row[3]               // nombreSerie
                 ))

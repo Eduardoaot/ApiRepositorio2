@@ -6,7 +6,6 @@ import mk.coleccion.dto.MangaPendienteDTO;
 import mk.coleccion.response.*;
 import mk.coleccion.servicio.MangaServicio;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,17 +13,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/manga")
-public class MangaDetallesControlador {
+public class MangaControlador {
 
     @Autowired
     private MangaServicio mangaServicio;
-
-    // Método POST para actualizar el estado de lectura
-    @PostMapping("/actualizarEstadoLectura")
-    public ResponseEntity<MangaEstadoLecturaResponse> actualizarEstadoLectura(@RequestBody ActualizarEstadoLecturaRequest request) {
-        MangaEstadoLecturaResponse response = mangaServicio.actualizarEstadoLectura(request.getIdManga(), request.getIdUsuario(), request.getEstadoLectura());
-        return ResponseEntity.ok(response);
-    }
 
     // Método GET para obtener detalles del manga
     @GetMapping("/{idManga}/{idUsuario}/detalles")
@@ -35,7 +27,14 @@ public class MangaDetallesControlador {
         return new MangaDetallesResponse(response, detalles);
     }
 
-    @GetMapping("/lectura/{id_usuario}")
+    // Método POST para actualizar el estado de lectura
+    @PostMapping("/actualizarEstadoLectura")
+    public ResponseEntity<MangaEstadoLecturaResponse> actualizarEstadoLectura(@RequestBody ActualizarEstadoLecturaRequest request) {
+        MangaEstadoLecturaResponse response = mangaServicio.actualizarEstadoLectura(request.getIdManga(), request.getIdUsuario(), request.getEstadoLectura());
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("lectura/{id_usuario}")
     public LecturaGeneralResponse obtenerDetallesLectura(@PathVariable Integer id_usuario) throws InterruptedException {
         // Obtener los detalles de la lectura
         MangaLecturaDTO detalles = mangaServicio.obtenerDetallesLectura(id_usuario);
@@ -61,6 +60,7 @@ public class MangaDetallesControlador {
         // Devolver la respuesta
         return new LecturaPendientesResponse(response, mangasPendientes);
     }
+
 }
 
 

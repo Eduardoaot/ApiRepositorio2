@@ -6,9 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.io.File;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Data
@@ -32,6 +30,6 @@ public class ColeccionSerie {
     @JoinColumn(name = "idEstadoSerie", nullable = false)
     EstadoSerie estadoSerie;
 
-    Date Fecha;
+    Date serieAddedDate;
 
 }

@@ -1,28 +1,53 @@
 package mk.coleccion.servicio;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import mk.coleccion.dto.CrearMonetarioAhorrosRequestDTO;
 import mk.coleccion.dto.EstadisticasResponseDTO;
 import mk.coleccion.dto.MejorAhorroDTO;
 import mk.coleccion.modelo.MonetarioAhorros;
+import mk.coleccion.modelo.Usuario;
 import mk.coleccion.repositorio.ColeccionMangaRepositorio;
 import mk.coleccion.repositorio.MonetarioAhorrosRepositorio;
+import mk.coleccion.repositorio.UsuarioRepositorio;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.time.Year;
 import java.time.YearMonth;
 import java.util.ArrayList;
-import java.util.List;
-
-import java.text.SimpleDateFormat;
 import java.util.Date;
-
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class EstadisticasServicio {
+public class MonetarioServicio {
 
-    private final ColeccionMangaRepositorio coleccionMangaRepositorio;
-    private final MonetarioAhorrosRepositorio monetarioAhorrosRepositorio;
+    @Autowired
+    private MonetarioAhorrosRepositorio monetarioAhorrosRepositorio;
+
+    @Autowired
+    private UsuarioRepositorio usuarioRepositorio;
+    @Autowired
+    private ColeccionMangaRepositorio coleccionMangaRepositorio;
+
+    @Transactional
+    public void guardarMonetarioAhorro(CrearMonetarioAhorrosRequestDTO requestDTO) {
+        Optional<Usuario> usuarioOptional = usuarioRepositorio.findById(requestDTO.getIdUsuario());
+
+        if (usuarioOptional.isEmpty()) {
+            throw new RuntimeException("Usuario no encontrado.");
+        }
+
+        MonetarioAhorros nuevoAhorro = new MonetarioAhorros();
+        nuevoAhorro.setUsuario4(usuarioOptional.get());
+        nuevoAhorro.setTotalSavedBudget(requestDTO.getTotalAhorrado());
+        nuevoAhorro.setTotalVolumesSaved(requestDTO.getTotalMangas());
+
+        monetarioAhorrosRepositorio.save(nuevoAhorro);
+    }
 
     public EstadisticasResponseDTO obtenerEstadisticasUsuario(Integer idUsuario) {
         int totalComprados = coleccionMangaRepositorio.contarPorUsuario(idUsuario);

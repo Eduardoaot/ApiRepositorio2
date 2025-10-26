@@ -6,9 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.io.File;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Data
@@ -32,10 +30,9 @@ public class ColeccionManga {
     @JoinColumn(name = "idEstadoLectura", nullable = false)
     EstadoLectura estadoLectura;
 
-    Date FechaAgregados;
+    Date addedMangaDate;
 
-    Date FechaLeidos;
+    Date ReadingDate;
 
-    Float TotalAhorado;
-
+    Float totalVolumenSave;
 }

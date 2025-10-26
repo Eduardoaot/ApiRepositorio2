@@ -23,16 +23,16 @@ public class MonetarioAhorros {
     @JoinColumn(name = "idUsuario", nullable = false)
     Usuario usuario4;
 
-    Float TotalAhorradoPresupuesto;
+    Float TotalSavedBudget;
 
-    Integer NumeroMangasAhorrados;
+    Integer TotalVolumesSaved;
 
-    Date FechaDeAhorro;
+    Date SavingsDate;
 
     @PrePersist
     public void prePersist() {
-        if (this.FechaDeAhorro == null) {
-            this.FechaDeAhorro = new Date();  // Asigna la fecha actual si no está establecida
+        if (this.SavingsDate == null) {
+            this.SavingsDate = new Date();  // Asigna la fecha actual si no está establecida
         }
     }
 }

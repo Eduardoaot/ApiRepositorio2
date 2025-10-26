@@ -26,7 +26,7 @@ public class MangaImagenControlador {
     public ResponseEntity<String> subirImagen(@RequestParam("file") MultipartFile file) {
         try {
             MangaImagen imagenGuardada = mangaImagenServicio.guardarImagen(file);
-            return ResponseEntity.ok("Imagen subida: " + imagenGuardada.getMangaImg());
+            return ResponseEntity.ok("Imagen subida: " + imagenGuardada.getMangaImageName());
         } catch (IOException | SQLException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al subir la imagen");
         }
@@ -40,7 +40,7 @@ public class MangaImagenControlador {
         if (imagenOpt.isPresent()) {
             try {
                 MangaImagen imagen = imagenOpt.get();
-                byte[] bytes = imagen.getMangaImagenArchivo().getBytes(1, (int) imagen.getMangaImagenArchivo().length());
+                byte[] bytes = imagen.getMangaImageFile().getBytes(1, (int) imagen.getMangaImageFile().length());
 
                 HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.IMAGE_JPEG); // Cambia según el formato de la imagen

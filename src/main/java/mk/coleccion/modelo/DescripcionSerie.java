@@ -13,13 +13,14 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 public class DescripcionSerie {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer idDescripcionSerie;
 
     @Lob
-    @Column(name = "descripcion_Serie", columnDefinition = "TEXT")
-    String descripcionSerie;
+    @Column(name = "description_serie", columnDefinition = "TEXT")
+    String descriptionSerie;
 
     @OneToMany(mappedBy = "descripcionSerie", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Serie> series;

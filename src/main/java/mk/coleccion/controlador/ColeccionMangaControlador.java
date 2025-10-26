@@ -20,19 +20,10 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/coleccion-manga")
-public class ColeccionMangaControlador {
+public class    ColeccionMangaControlador {
 
     @Autowired
     private ColeccionMangaServicio coleccionMangaServicio;
-
-    @Autowired
-    private ColeccionMangaRepositorio coleccionMangaRepositorio;
-
-    @Autowired
-    private MonetarioAhorrosRepositorio monetarioAhorrosRepositorio;
-
-    @Autowired
-    private MangaRepositorio mangaRepositorio;
 
     @GetMapping("/detalles/{idUsuario}")
     public ResponseEntity<MangaResponse> obtenerDetallesColeccionManga(@PathVariable Integer idUsuario) {

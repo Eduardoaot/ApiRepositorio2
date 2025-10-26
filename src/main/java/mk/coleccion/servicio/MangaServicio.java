@@ -7,6 +7,7 @@ import mk.coleccion.dto.MangaSinLeerDTO;
 import mk.coleccion.repositorio.MangaRepositorio;
 import mk.coleccion.response.MangaEstadoLecturaResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -20,6 +21,9 @@ public class MangaServicio implements IMangaServicio {
     @Autowired
     private MangaRepositorio mangaRepositorio;
 
+    @Value("${app.base.image.url}")
+    private String baseImageUrl;
+
     public List<MangaDetallesDTO> obtenerDetallesManga(Integer idManga, Integer idUsuario) {
         List<Object[]> results = mangaRepositorio.buscarDetallesManga(idManga, idUsuario);
         return results.stream()
@@ -29,7 +33,7 @@ public class MangaServicio implements IMangaServicio {
                         (String) row[2],  // estadoLectura
                         (String) row[3],  // descripcion
                         (String) row[4],  // nombreAutor
-                        (String) row[5],  // imagenManga
+                        baseImageUrl + (String) row[5],  // imagenManga
                         (Float) row[6],   // precioManga
                         (Long) row[7]     // estadoAgregado
                 ))
@@ -62,7 +66,7 @@ public class MangaServicio implements IMangaServicio {
             String imagenManga = (String) row[2];  // Imagen del manga (String)
 
             // Creamos el objeto MangaPendienteDTO con los datos obtenidos
-            MangaPendienteDTO mangaPendienteDTO = new MangaPendienteDTO(idManga, numeroManga, imagenManga);
+            MangaPendienteDTO mangaPendienteDTO = new MangaPendienteDTO(idManga, numeroManga, (baseImageUrl + imagenManga));
 
             // Añadimos el objeto a la lista
             mangasPendientes.add(mangaPendienteDTO);
@@ -88,7 +92,7 @@ public class MangaServicio implements IMangaServicio {
             Float mangaSum = (Float) row[2];  // Número del manga (Float)
             String direccionManga = (String) row[3];  // Dirección de la imagen (String)
             // Creamos el objeto MangaSinLeerDTO con los datos obtenidos
-            MangaSinLeerDTO mangaSinLeerDTO = new MangaSinLeerDTO(idManga, serieNom, mangaSum, direccionManga);
+            MangaSinLeerDTO mangaSinLeerDTO = new MangaSinLeerDTO(idManga, serieNom, mangaSum, (baseImageUrl + direccionManga));
             // Añadimos el objeto a la lista
             mangasSinLeer.add(mangaSinLeerDTO);
         }
@@ -161,20 +165,11 @@ public class MangaServicio implements IMangaServicio {
                 }
             }
         }
-
-
-
         mangaLecturaDTO.setListaMangasCompradosData(mangasAgregados);
         mangaLecturaDTO.setListaMangasLeidosData(mangasLeidos);
 
         return mangaLecturaDTO;
     }
-
-
-
-
-
-
 
 }
 

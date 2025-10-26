@@ -14,11 +14,10 @@ import mk.coleccion.repositorio.PresupuestoMangaRepositorio;
 import mk.coleccion.repositorio.PresupuestoRepositorio;
 import mk.coleccion.repositorio.UsuarioRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class PresupuestoServicio {
@@ -35,6 +34,9 @@ public class PresupuestoServicio {
     @Autowired
     private PresupuestoMangaRepositorio presupuestoMangaRepositorio;
 
+    @Value("${app.base.image.url}")
+    private String baseImageUrl;
+
     @Transactional
     public void crearPresupuestoConMangas(CrearPresupuestoRequestDTO request) {
         // 1. Buscar el usuario
@@ -43,10 +45,10 @@ public class PresupuestoServicio {
 
         // 2. Crear el presupuesto con los datos recibidos
         Presupuestos presupuesto = new Presupuestos();
-        presupuesto.setNombrePresupuesto(request.getNombreBolsa());
+        presupuesto.setNameBudget(request.getNombreBolsa());
         presupuesto.setUsuario(usuario);
-        presupuesto.setDescuento(request.getDescuento());
-        presupuesto.setFechaPresupuestoCreado(new Date());
+        presupuesto.setDiscount(request.getDescuento());
+        presupuesto.setDateBudgetCreated(new Date());
 
         presupuesto = presupuestoRepositorio.save(presupuesto); // Guarda y obtiene el ID
 
@@ -89,7 +91,7 @@ public class PresupuestoServicio {
                 presupuestosMap.get(idPresupuesto).getListaMangasPresupuesto().add(new MangaPresupuestoDTO(
                         (Integer) row[5],  // idManga
                         (Float) row[6],    // mangaNum
-                        (String) row[7],   // direccionMangaImg
+                        baseImageUrl + (String) row[7],   // direccionMangaImg
                         (Float) row[8],    // precio
                         (String) row[9]    // serieNom
                 ));
@@ -123,7 +125,7 @@ public class PresupuestoServicio {
                 listaMangas.add(new MangaPresupuestoDTO(
                         (Integer) row[5],  // idManga
                         (Float) row[6],    // mangaNum
-                        (String) row[7],   // direccionMangaImg
+                        baseImageUrl + (String) row[7],   // direccionMangaImg
                         (Float) row[8],    // precio
                         (String) row[9]    // serieNom
                 ));
@@ -159,8 +161,8 @@ public class PresupuestoServicio {
         Presupuestos presupuesto = presupuestoOptional.get();
 
         // Actualizar los campos del presupuesto
-        presupuesto.setNombrePresupuesto(actualizarPresupuestoRequestDTO.getNombrePresupuesto());
-        presupuesto.setDescuento(actualizarPresupuestoRequestDTO.getDescuento());
+        presupuesto.setNameBudget(actualizarPresupuestoRequestDTO.getNombrePresupuesto());
+        presupuesto.setDiscount(actualizarPresupuestoRequestDTO.getDescuento());
 
         // Eliminar los mangas asociados al presupuesto
         presupuestoMangaRepositorio.deleteAllByIdPresupuesto(actualizarPresupuestoRequestDTO.getIdPresupuesto());

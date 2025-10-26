@@ -6,9 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.io.File;
 import java.sql.Blob;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -25,11 +23,7 @@ public class MangaImagen {
     @OneToMany(mappedBy = "mangaImagen", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Manga> mangas;
 
-    String mangaImg;
+    String mangaImageName;
 
-    Blob mangaImagenArchivo;
-
-    String direccionMangaImg;
-
-
+    Blob mangaImageFile;
 }

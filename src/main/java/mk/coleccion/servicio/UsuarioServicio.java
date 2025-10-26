@@ -1,7 +1,6 @@
 package mk.coleccion.servicio;
 
 import mk.coleccion.dto.UsuarioPerfilDTO;
-import mk.coleccion.modelo.ColeccionManga;
 import mk.coleccion.modelo.Usuario;
 import mk.coleccion.repositorio.UsuarioRepositorio;
 import mk.coleccion.response.LecturaYMetaResponse;
@@ -9,9 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class UsuarioServicio implements IUsuarioServicio{
@@ -24,7 +21,7 @@ public class UsuarioServicio implements IUsuarioServicio{
         Usuario usuario = usuarioRepositorio.findById(idUsuario).orElse(null);
         if (usuario != null) {
             // Mapear los datos a un DTO
-            return new UsuarioPerfilDTO(usuario.getEmail(), usuario.getName(), usuario.getUser());
+            return new UsuarioPerfilDTO(usuario.getUserEmail(), usuario.getFullName(), usuario.getUserName());
         }
         return null; // O retornar una respuesta vacía o un error si no se encuentra el usuario
     }
@@ -32,7 +29,7 @@ public class UsuarioServicio implements IUsuarioServicio{
     @Override
     public Usuario guardarUsuario(Usuario usuario) {
         // Verificar si el email o el usuario ya existen en la base de datos
-        boolean existe = usuarioRepositorio.existsByEmailOrUser(usuario.getEmail(), usuario.getUser());
+        boolean existe = usuarioRepositorio.existsByUserEmailOrUserName(usuario.getUserEmail(), usuario.getUserName());
 
         if (existe) {
             throw new RuntimeException("El correo electrónico o el nombre de usuario ya están en uso.");
@@ -45,10 +42,10 @@ public class UsuarioServicio implements IUsuarioServicio{
 
     public Usuario autenticarUsuario(String emailOrUser, String contrasena) {
         // Buscar al usuario por email o nombre de usuario
-        Usuario usuario = usuarioRepositorio.findByEmailOrUser(emailOrUser, emailOrUser);
+        Usuario usuario = usuarioRepositorio.findByUserEmailOrUserName(emailOrUser, emailOrUser);
 
         // Verificar si el usuario existe y si la contraseña es correcta
-        if (usuario != null && usuario.getPassword().equals(contrasena)) {
+        if (usuario != null && usuario.getUserPassword().equals(contrasena)) {
             return usuario; // Retorna el usuario si la contraseña es correcta
         }
         return null; // Retorna null si el usuario no existe o la contraseña es incorrecta

@@ -6,8 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.io.File;
-import java.sql.Blob;
 import java.util.Date;
 import java.util.List;
 
@@ -25,22 +23,20 @@ public class Manga {
     @JoinColumn(name = "idSerie", nullable = false)
     Serie serie;
 
-    Float mangaNum;
+    Float volumeNumber;
 
     @ManyToOne
     @JoinColumn(name = "idDesc", nullable = false)
     DescripcionManga descripcionManga;
 
-    @ManyToOne
-    @JoinColumn(name = "idPrecio", nullable = false)
-    Precios precios;
+    @Column(name = "manga_price", nullable = false)
+    Float mangaPrice;
 
     @ManyToOne
     @JoinColumn(name = "idMangaImagen", nullable = false)
     MangaImagen mangaImagen;
 
     Date mangaDate;
-
 
     @OneToMany(mappedBy = "manga", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PresupuestosManga> presupuestosMangas;

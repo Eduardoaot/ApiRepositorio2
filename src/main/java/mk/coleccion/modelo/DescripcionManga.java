@@ -18,8 +18,8 @@ public class DescripcionManga {
     Integer idDescripcionManga;
 
     @Lob
-    @Column(name = "descripcion_Manga", columnDefinition = "TEXT")
-    String descripcionManga;
+    @Column(name = "description_Manga", columnDefinition = "TEXT")
+    String descriptionManga;
 
     @OneToMany(mappedBy = "descripcionManga", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Manga> mangas;
