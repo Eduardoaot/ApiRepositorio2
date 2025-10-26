@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="mk.coleccion.appHeramienta.controlador.MangaVentanaControllerAPP">
+    <TableView fx:id="tableMangas" layoutX="20" layoutY="20" prefWidth="560" prefHeight="360">
+        <columns>
+            <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
+            <TableColumn fx:id="colVolumen" text="Volumen" prefWidth="100"/>
+            <TableColumn fx:id="colDescripcion" text="Descripción" prefWidth="250"/>
+            <TableColumn fx:id="colPrecio" text="Precio" prefWidth="100"/>
+        </columns>
+    </TableView>
+</AnchorPane>
+

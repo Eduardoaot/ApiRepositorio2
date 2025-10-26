@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="mk.coleccion.appHeramienta.controlador.IndexControlador">
+   <TableView fx:id="tableSeries" layoutX="20" layoutY="20" prefWidth="560" prefHeight="360">
+      <columns>
+         <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
+         <TableColumn fx:id="colNombre" text="Nombre" prefWidth="200"/>
+         <TableColumn fx:id="colAutor" text="Autor" prefWidth="150"/>
+         <TableColumn fx:id="colTotales" text="Totales" prefWidth="100"/>
+      </columns>
+   </TableView>
+</AnchorPane>
+
